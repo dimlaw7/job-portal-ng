@@ -28,7 +28,12 @@ export default function OpportunityCard({ opportunity }) {
       <div className="mt-5 flex flex-wrap gap-4 text-sm text-gray-500">
         <span>{opportunity.location}</span>
 
-        <span>Deadline: {opportunity.deadline}</span>
+        <span>
+          Deadline:{" "}
+          {opportunity.deadline
+            ? new Date(opportunity.deadline).toLocaleDateString("en-GB")
+            : "Not specified"}
+        </span>
       </div>
 
       <div className="mt-6 border-t border-gray-100 pt-4">

@@ -3,6 +3,7 @@ import Header from "@/components/layout/Header";
 import Hero from "@/components/layout/Hero";
 import CategorySection from "@/components/opportunities/CategorySection";
 import LatestOpportunities from "@/components/opportunities/LatestOpportunities";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -12,7 +13,16 @@ export default function Home() {
       <main>
         <Hero />
         <CategorySection />
-        <LatestOpportunities />
+
+        <Suspense
+          fallback={
+            <section className="mx-auto max-w-7xl px-6 py-16">
+              <p className="text-gray-500">Loading latest opportunities...</p>
+            </section>
+          }
+        >
+          <LatestOpportunities />
+        </Suspense>
         <Footer />
       </main>
     </>

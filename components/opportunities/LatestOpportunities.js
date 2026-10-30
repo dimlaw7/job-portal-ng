@@ -1,61 +1,19 @@
+import { getLatestOpportunities } from "@/lib/db/opportunities";
 import OpportunityCard from "./OpportunityCard";
 
-const opportunities = [
-  {
-    id: 1,
-    category: "Jobs",
-    title: "Graduate Trainee Programme",
-    organization: "Example Technologies",
-    description:
-      "An opportunity for recent graduates to develop professional skills and gain practical industry experience.",
-    location: "Lagos, Nigeria",
-    deadline: "November 30, 2026",
-    href: "/jobs/graduate-trainee",
-  },
-  {
-    id: 2,
-    category: "Scholarships",
-    title: "International Masters Scholarship",
-    organization: "Example University",
-    description:
-      "A postgraduate scholarship opportunity for eligible international students pursuing a master's degree.",
-    location: "United Kingdom",
-    deadline: "December 15, 2026",
-    href: "/scholarships/international-masters",
-  },
-  {
-    id: 3,
-    category: "Internships",
-    title: "Software Engineering Internship",
-    organization: "Example Innovations",
-    description:
-      "An internship opportunity for aspiring software engineers looking to gain practical development experience.",
-    location: "Remote",
-    deadline: "December 10, 2026",
-    href: "/internships/software-engineering",
-  },
-];
+export default async function LatestOpportunities() {
+  const opportunities = await getLatestOpportunities();
+  console.log("Latest Opportunities:", opportunities); // Debugging line
 
-export default function LatestOpportunities() {
   return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <div className="mb-10 flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Latest Opportunities
-          </h2>
-
-          <p className="mt-2 text-gray-500">
-            Explore recently discovered opportunities.
-          </p>
-        </div>
-
-        <a
-          href="/opportunities"
-          className="hidden text-sm font-semibold text-blue-600 hover:text-blue-800 sm:block"
-        >
-          View all →
-        </a>
+    <section className="mx-auto max-w-7xl px-6 py-16">
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-gray-900">
+          Latest Opportunities
+        </h2>
+        <p className="mt-2 text-gray-600">
+          Explore the latest jobs, scholarships and internships.
+        </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -63,6 +21,12 @@ export default function LatestOpportunities() {
           <OpportunityCard key={opportunity.id} opportunity={opportunity} />
         ))}
       </div>
+
+      {opportunities.length === 0 && (
+        <p className="text-gray-500">
+          No opportunities available at the moment.
+        </p>
+      )}
     </section>
   );
 }
