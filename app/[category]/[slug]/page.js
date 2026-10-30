@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import { getOpportunityBySlug } from "@/lib/db/opportunities";
+import SiteLayout from "@/components/layout/SiteLayout";
 
 async function OpportunityContent({ category, slug }) {
   const opportunity = await getOpportunityBySlug(category, slug);
@@ -87,8 +88,10 @@ async function OpportunityPageContent({ params }) {
 
 export default function OpportunityPage({ params }) {
   return (
-    <Suspense fallback={<p className="p-10">Loading opportunity...</p>}>
-      <OpportunityPageContent params={params} />
-    </Suspense>
+    <SiteLayout>
+      <Suspense fallback={<p className="p-10">Loading opportunity...</p>}>
+        <OpportunityPageContent params={params} />
+      </Suspense>
+    </SiteLayout>
   );
 }

@@ -1,5 +1,4 @@
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
+import SiteLayout from "@/components/layout/SiteLayout";
 import Hero from "@/components/layout/Hero";
 import CategorySection from "@/components/opportunities/CategorySection";
 import LatestOpportunities from "@/components/opportunities/LatestOpportunities";
@@ -7,9 +6,7 @@ import { Suspense } from "react";
 
 export default function Home() {
   return (
-    <>
-      <Header />
-
+    <SiteLayout>
       <main>
         <Hero />
         <CategorySection />
@@ -23,8 +20,7 @@ export default function Home() {
         >
           <LatestOpportunities />
         </Suspense>
-        <Footer />
       </main>
-    </>
+    </SiteLayout>
   );
 }

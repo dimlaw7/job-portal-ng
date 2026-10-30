@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { searchOpportunities } from "@/lib/db/opportunities";
 import OpportunityCard from "@/components/opportunities/OpportunityCard";
+import SiteLayout from "@/components/layout/SiteLayout";
 
 async function SearchResults({ searchParams }) {
   const { q, category } = await searchParams;
@@ -65,12 +66,16 @@ async function SearchResults({ searchParams }) {
 
 export default function SearchPage({ searchParams }) {
   return (
-    <main className="mx-auto min-h-screen max-w-7xl px-6 py-16">
-      <h1 className="text-3xl font-bold text-gray-900">Search Opportunities</h1>
+    <SiteLayout>
+      <main className="mx-auto min-h-screen max-w-7xl px-6 py-16">
+        <h1 className="text-3xl font-bold text-gray-900">
+          Search Opportunities
+        </h1>
 
-      <Suspense fallback={<p className="mt-8 text-gray-500">Searching...</p>}>
-        <SearchResults searchParams={searchParams} />
-      </Suspense>
-    </main>
+        <Suspense fallback={<p className="mt-8 text-gray-500">Searching...</p>}>
+          <SearchResults searchParams={searchParams} />
+        </Suspense>
+      </main>
+    </SiteLayout>
   );
 }

@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import pool from "@/lib/db";
 import { getOpportunitiesByCategory } from "@/lib/db/opportunities";
 import OpportunityCard from "@/components/opportunities/OpportunityCard";
+import SiteLayout from "@/components/layout/SiteLayout";
 
 async function CategoryContent({ category, page }) {
   const [categories] = await pool.query(
@@ -81,8 +82,10 @@ async function CategoryPageContent({ params, searchParams }) {
 
 export default function CategoryPage({ params, searchParams }) {
   return (
-    <Suspense fallback={<p className="p-10">Loading opportunities...</p>}>
-      <CategoryPageContent params={params} searchParams={searchParams} />
-    </Suspense>
+    <SiteLayout>
+      <Suspense fallback={<p className="p-10">Loading opportunities...</p>}>
+        <CategoryPageContent params={params} searchParams={searchParams} />
+      </Suspense>
+    </SiteLayout>
   );
 }
