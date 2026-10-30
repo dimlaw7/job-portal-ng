@@ -16,17 +16,26 @@ export default function Hero() {
           world.
         </p>
 
-        <div className="mx-auto mt-10 flex max-w-xl flex-col gap-3 sm:flex-row">
+        <form
+          action="/search"
+          method="GET"
+          className="mx-auto mt-10 flex max-w-xl flex-col gap-3 sm:flex-row"
+        >
           <input
-            type="text"
+            type="search"
+            name="q"
             placeholder="Search opportunities..."
+            required
             className="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-5 py-4 outline-none focus:border-blue-500"
           />
 
-          <button className="rounded-lg bg-blue-600 px-8 py-4 font-semibold text-white hover:bg-blue-700">
+          <button
+            type="submit"
+            className="rounded-lg bg-blue-600 px-8 py-4 font-semibold text-white hover:bg-blue-700"
+          >
             Search
           </button>
-        </div>
+        </form>
       </div>
     </section>
   );
