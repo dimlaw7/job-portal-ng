@@ -38,7 +38,7 @@ export default function OpportunityCard({ opportunity }) {
 
       <div className="mt-6 border-t border-gray-100 pt-4">
         <a
-          href={opportunity.href}
+          href={`/${opportunity.category_slug}/${opportunity.slug}`}
           className="text-sm font-semibold text-blue-600 hover:text-blue-800"
         >
           View opportunity →
