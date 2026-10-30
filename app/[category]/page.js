@@ -5,7 +5,7 @@ import pool from "@/lib/db";
 import { getOpportunitiesByCategory } from "@/lib/db/opportunities";
 import OpportunityCard from "@/components/opportunities/OpportunityCard";
 
-async function CategoryContent({ category }) {
+async function CategoryContent({ category, page }) {
   const [categories] = await pool.query(
     "SELECT name, description FROM categories WHERE slug = ?",
     [category],
@@ -15,7 +15,8 @@ async function CategoryContent({ category }) {
     notFound();
   }
 
-  const opportunities = await getOpportunitiesByCategory(category);
+  const { opportunities, totalPages, currentPage } =
+    await getOpportunitiesByCategory(category, page);
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-16">
@@ -32,6 +33,32 @@ async function CategoryContent({ category }) {
         ))}
       </div>
 
+      {totalPages > 1 && (
+        <div className="mt-12 flex items-center justify-center gap-4">
+          {currentPage > 1 && (
+            <a
+              href={`/${category}?page=${currentPage - 1}`}
+              className="rounded-lg border border-gray-200 px-5 py-2 text-sm font-medium hover:bg-gray-50"
+            >
+              Previous
+            </a>
+          )}
+
+          <span className="text-sm text-gray-600">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          {currentPage < totalPages && (
+            <a
+              href={`/${category}?page=${currentPage + 1}`}
+              className="rounded-lg border border-gray-200 px-5 py-2 text-sm font-medium hover:bg-gray-50"
+            >
+              Next
+            </a>
+          )}
+        </div>
+      )}
+
       {opportunities.length === 0 && (
         <p className="mt-8 text-gray-500">
           No opportunities available in this category yet.
@@ -41,16 +68,21 @@ async function CategoryContent({ category }) {
   );
 }
 
-async function CategoryPageContent({ params }) {
+async function CategoryPageContent({ params, searchParams }) {
   const { category } = await params;
+  const { page } = await searchParams;
 
-  return <CategoryContent category={category} />;
+  const parsedPage = Number(page);
+  const currentPage =
+    Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+
+  return <CategoryContent category={category} page={currentPage} />;
 }
 
-export default function CategoryPage({ params }) {
+export default function CategoryPage({ params, searchParams }) {
   return (
     <Suspense fallback={<p className="p-10">Loading opportunities...</p>}>
-      <CategoryPageContent params={params} />
+      <CategoryPageContent params={params} searchParams={searchParams} />
     </Suspense>
   );
 }
