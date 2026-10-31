@@ -3,7 +3,6 @@ import OpportunityCard from "./OpportunityCard";
 
 export default async function LatestOpportunities() {
   const opportunities = await getLatestOpportunities();
-  console.log("Latest Opportunities:", opportunities); // Debugging line
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-16">
