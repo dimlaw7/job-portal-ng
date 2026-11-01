@@ -1,4 +1,6 @@
+"use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navigation = [
   {
@@ -28,6 +30,8 @@ const navigation = [
 ];
 
 export default function AdminSidebar() {
+  const pathname = usePathname();
+
   return (
     <aside className="flex h-full w-64 flex-col border-r border-gray-200 bg-white">
       <div className="border-b border-gray-200 px-6 py-5">
@@ -43,7 +47,12 @@ export default function AdminSidebar() {
           <Link
             key={item.name}
             href={item.href}
-            className="block rounded-md px-3 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
+            className={`block rounded-md px-3 py-2.5 text-sm font-medium transition ${
+              pathname === item.href ||
+              (item.href !== "/admin" && pathname.startsWith(`${item.href}/`))
+                ? "bg-blue-50 text-blue-700"
+                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+            }`}
           >
             {item.name}
           </Link>

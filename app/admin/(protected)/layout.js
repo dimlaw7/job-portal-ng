@@ -12,8 +12,10 @@ async function AdminLayoutContent({ children }) {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <AdminSidebar />
+    <div className="flex min-h-screen flex-col bg-gray-50 md:flex-row">
+      <div className="hidden md:block">
+        <AdminSidebar />
+      </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
         <AdminHeader admin={admin} />
