@@ -1,25 +1,32 @@
 import SiteLayout from "@/components/layout/SiteLayout";
 import Hero from "@/components/layout/Hero";
-import CategorySection from "@/components/opportunities/CategorySection";
-import LatestOpportunities from "@/components/opportunities/LatestOpportunities";
-import { Suspense } from "react";
+import OpportunityCategorySection from "@/components/opportunities/OpportunityCategorySection";
 
 export default function Home() {
   return (
     <SiteLayout>
       <main>
         <Hero />
-        <CategorySection />
 
-        <Suspense
-          fallback={
-            <section className="mx-auto max-w-7xl px-6 py-16">
-              <p className="text-gray-500">Loading latest opportunities...</p>
-            </section>
-          }
-        >
-          <LatestOpportunities />
-        </Suspense>
+        <div className="mx-auto max-w-7xl px-6 py-8">
+          <OpportunityCategorySection
+            title="Latest Jobs"
+            categorySlug="jobs"
+            description="Explore recently published job opportunities."
+          />
+
+          <OpportunityCategorySection
+            title="Latest Scholarships"
+            categorySlug="scholarships"
+            description="Discover scholarships and funding opportunities."
+          />
+
+          <OpportunityCategorySection
+            title="Latest Internships"
+            categorySlug="internships"
+            description="Find internship opportunities to develop your career."
+          />
+        </div>
       </main>
     </SiteLayout>
   );
