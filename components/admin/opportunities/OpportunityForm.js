@@ -9,6 +9,8 @@ export default function OpportunityForm({ categories, sources }) {
     { label: "", url: "" },
   ]);
   const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("draft");
+  const [isFeatured, setIsFeatured] = useState(false);
 
   function addApplicationLink() {
     setApplicationLinks((previous) => [...previous, { label: "", url: "" }]);
@@ -307,6 +309,61 @@ export default function OpportunityForm({ categories, sources }) {
           </p>
         </div>
       </section>
+
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold text-gray-900">Publishing</h2>
+
+        <div>
+          <label
+            htmlFor="status"
+            className="mb-2 block text-sm font-medium text-gray-700"
+          >
+            Opportunity Status
+          </label>
+
+          <select
+            id="status"
+            value={status}
+            onChange={(event) => setStatus(event.target.value)}
+            className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm"
+          >
+            <option value="draft">Save as Draft</option>
+            <option value="published">Publish Immediately</option>
+          </select>
+        </div>
+      </section>
+
+      <div className="flex items-start gap-3">
+        <input
+          id="is_featured"
+          type="checkbox"
+          checked={isFeatured}
+          onChange={(event) => setIsFeatured(event.target.checked)}
+          className="mt-1 h-4 w-4 rounded border-gray-300"
+        />
+
+        <div>
+          <label
+            htmlFor="is_featured"
+            className="text-sm font-medium text-gray-700"
+          >
+            Feature this opportunity
+          </label>
+
+          <p className="mt-1 text-sm text-gray-500">
+            Display this opportunity in the homepage featured section.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex justify-end border-t border-gray-200 pt-6">
+        <button
+          type="submit"
+          className="rounded-md bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-800"
+        >
+          {status === "published" ? "Publish Opportunity" : "Save as Draft"}
+        </button>
+      </div>
     </form>
   );
 }
