@@ -1,6 +1,15 @@
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { getAdmin } from "@/lib/auth/admin";
 import AdminLoginForm from "@/components/admin/AdminLoginForm";
 
-export default function AdminLoginPage() {
+async function LoginPageContent() {
+  const admin = await getAdmin();
+
+  if (admin) {
+    redirect("/admin");
+  }
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
@@ -13,5 +22,13 @@ export default function AdminLoginPage() {
         <AdminLoginForm />
       </div>
     </main>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={<p className="p-6">Loading...</p>}>
+      <LoginPageContent />
+    </Suspense>
   );
 }
