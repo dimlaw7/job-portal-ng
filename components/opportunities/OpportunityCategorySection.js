@@ -10,16 +10,22 @@ export default async function OpportunityCategorySection({
   const opportunities = await getLatestOpportunitiesByCategory(categorySlug, 5);
 
   return (
-    <section className="border-b border-gray-200 py-8">
-      <div className="mb-3 flex items-center justify-between">
+    <section className="mb-6 rounded-lg border border-gray-200 bg-white px-4 py-5 md:px-5">
+      <div className="mb-4 flex items-end justify-between border-b-2 border-gray-100 pb-3">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">{title}</h2>
-          <p className="mt-1 text-sm text-gray-500">{description}</p>
+          <span className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-brand">
+            Latest Opportunities
+          </span>
+          <h2 className="text-xl font-extrabold text-gray-900 md:text-2xl">
+            {title}
+          </h2>
+
+          <p className="mt-1 text-xs text-gray-500 md:text-sm">{description}</p>
         </div>
 
         <Link
           href={`/${categorySlug}`}
-          className="text-sm font-semibold text-blue-700 hover:text-blue-900"
+          className="shrink-0 text-xs font-bold text-brand hover:underline md:text-sm"
         >
           View all →
         </Link>
