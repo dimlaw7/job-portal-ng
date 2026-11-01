@@ -4,6 +4,7 @@ import Link from "next/link";
 import SiteLayout from "@/components/layout/SiteLayout";
 import Hero from "@/components/layout/Hero";
 import OpportunityCategorySection from "@/components/opportunities/OpportunityCategorySection";
+import FeaturedOpportunities from "@/components/opportunities/FeaturedOpportunities";
 
 function LoadingSection() {
   return (
@@ -77,6 +78,10 @@ export default function Home() {
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-8 md:px-6 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]">
           {/* Main Content */}
           <div>
+            <Suspense fallback={<LoadingSection />}>
+              <FeaturedOpportunities />
+            </Suspense>
+
             <Suspense fallback={<LoadingSection />}>
               <OpportunityCategorySection
                 title="Latest Jobs"
