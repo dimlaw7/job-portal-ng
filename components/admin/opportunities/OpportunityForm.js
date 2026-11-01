@@ -8,9 +8,14 @@ export default function OpportunityForm({ categories, sources }) {
   const [applicationLinks, setApplicationLinks] = useState([
     { label: "", url: "" },
   ]);
+
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("draft");
   const [isFeatured, setIsFeatured] = useState(false);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   function addApplicationLink() {
     setApplicationLinks((previous) => [...previous, { label: "", url: "" }]);
@@ -20,8 +25,30 @@ export default function OpportunityForm({ categories, sources }) {
     setApplicationLinks((previous) => previous.filter((_, i) => i !== index));
   }
 
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    setIsSubmitting(true);
+    setError("");
+    setSuccess("");
+
+    const formData = new FormData(event.currentTarget);
+
+    const opportunityData = Object.fromEntries(formData.entries());
+
+    opportunityData.category_id = Number(categoryId);
+    opportunityData.description = description;
+    opportunityData.application_links = applicationLinks;
+    opportunityData.status = status;
+    opportunityData.is_featured = isFeatured;
+
+    console.log(opportunityData);
+
+    setIsSubmitting(false);
+  }
+
   return (
-    <form className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-8">
       {/* Basic Information */}
       <section className="space-y-5">
         <div className="border-b border-gray-200 pb-3">
@@ -359,9 +386,14 @@ export default function OpportunityForm({ categories, sources }) {
       <div className="flex justify-end border-t border-gray-200 pt-6">
         <button
           type="submit"
-          className="rounded-md bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-800"
+          disabled={isSubmitting}
+          className="rounded-md bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {status === "published" ? "Publish Opportunity" : "Save as Draft"}
+          {isSubmitting
+            ? "Saving..."
+            : status === "published"
+              ? "Publish Opportunity"
+              : "Save as Draft"}
         </button>
       </div>
     </form>
