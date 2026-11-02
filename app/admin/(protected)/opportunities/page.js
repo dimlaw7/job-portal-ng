@@ -30,9 +30,18 @@ async function OpportunitiesContent() {
                 </p>
               </div>
 
-              <span className="w-fit rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
-                {opportunity.status}
-              </span>
+              <div className="flex items-center gap-4">
+                <span className="w-fit rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
+                  {opportunity.status}
+                </span>
+
+                <a
+                  href={`/admin/opportunities/${opportunity.id}/edit`}
+                  className="text-sm font-semibold text-blue-700 hover:text-blue-900"
+                >
+                  Edit
+                </a>
+              </div>
             </div>
           ))}
         </div>

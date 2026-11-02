@@ -3,15 +3,41 @@
 import { useState } from "react";
 import OpportunityEditor from "./OpportunityEditor";
 
-export default function OpportunityForm({ categories, sources }) {
-  const [categoryId, setCategoryId] = useState("");
-  const [applicationLinks, setApplicationLinks] = useState([
-    { label: "", url: "" },
-  ]);
+function formatDateTimeLocal(value) {
+  if (!value) return "";
 
-  const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("draft");
-  const [isFeatured, setIsFeatured] = useState(false);
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "";
+
+  const pad = (number) => String(number).padStart(2, "0");
+
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}T${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
+}
+
+export default function OpportunityForm({ categories, sources, initialData }) {
+  const [categoryId, setCategoryId] = useState(
+    initialData?.category_id?.toString() || "",
+  );
+
+  const [applicationLinks, setApplicationLinks] = useState(
+    initialData?.application_links?.length
+      ? initialData.application_links.map((link) => ({
+          label: link.label,
+          url: link.url,
+        }))
+      : [{ label: "", url: "" }],
+  );
+
+  const [description, setDescription] = useState(
+    initialData?.description || "",
+  );
+
+  const [status, setStatus] = useState(initialData?.status || "draft");
+
+  const [isFeatured, setIsFeatured] = useState(
+    Boolean(initialData?.is_featured),
+  );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -106,6 +132,7 @@ export default function OpportunityForm({ categories, sources }) {
             required
             className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
             placeholder="Enter opportunity title"
+            defaultValue={initialData?.title || ""}
           />
         </div>
 
@@ -149,6 +176,7 @@ export default function OpportunityForm({ categories, sources }) {
             type="text"
             className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
             placeholder="Enter organization name"
+            defaultValue={initialData?.organization || ""}
           />
         </div>
 
@@ -166,6 +194,7 @@ export default function OpportunityForm({ categories, sources }) {
             type="text"
             className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
             placeholder="e.g. Lagos, Nigeria or Remote"
+            defaultValue={initialData?.location || ""}
           />
         </div>
       </section>
@@ -210,6 +239,7 @@ export default function OpportunityForm({ categories, sources }) {
             name="source_id"
             required
             className="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+            defaultValue={initialData?.source_id?.toString() || ""}
           >
             <option value="">Select a source</option>
 
@@ -236,6 +266,7 @@ export default function OpportunityForm({ categories, sources }) {
             required
             className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
             placeholder="https://example.com/opportunity"
+            defaultValue={initialData?.source_url || ""}
           />
 
           <p className="mt-2 text-xs text-gray-500">
@@ -359,6 +390,9 @@ export default function OpportunityForm({ categories, sources }) {
             name="application_deadline"
             type="datetime-local"
             className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+            defaultValue={formatDateTimeLocal(
+              initialData?.application_deadline,
+            )}
           />
 
           <p className="mt-2 text-xs text-gray-500">
