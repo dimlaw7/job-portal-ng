@@ -32,24 +32,53 @@ export default function OpportunityForm({ categories, sources }) {
     setError("");
     setSuccess("");
 
-    const formData = new FormData(event.currentTarget);
+    try {
+      const formData = new FormData(event.currentTarget);
 
-    const opportunityData = Object.fromEntries(formData.entries());
+      const opportunityData = Object.fromEntries(formData.entries());
 
-    opportunityData.category_id = Number(categoryId);
-    opportunityData.source_id = Number(opportunityData.source_id);
-    opportunityData.description = description;
-    opportunityData.application_links = applicationLinks;
-    opportunityData.status = status;
-    opportunityData.is_featured = isFeatured;
+      opportunityData.category_id = Number(categoryId);
+      opportunityData.source_id = Number(opportunityData.source_id);
+      opportunityData.description = description;
+      opportunityData.application_links = applicationLinks;
+      opportunityData.status = status;
+      opportunityData.is_featured = isFeatured;
 
-    console.log(opportunityData);
+      const response = await fetch("/api/admin/opportunities", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(opportunityData),
+      });
 
-    setIsSubmitting(false);
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Unable to save opportunity.");
+      }
+
+      setSuccess(result.message);
+    } catch (error) {
+      setError(error.message || "Something went wrong.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
+      {error && (
+        <div className="rounded-md bg-red-50 p-4 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="rounded-md bg-green-50 p-4 text-sm text-green-700">
+          {success}
+        </div>
+      )}
       {/* Basic Information */}
       <section className="space-y-5">
         <div className="border-b border-gray-200 pb-3">
