@@ -79,6 +79,10 @@ async function OpportunitiesContent({ searchParams }) {
         </a>
       </form>
 
+      <p className="mt-1 text-sm text-gray-500">
+        {total} {total === 1 ? "opportunity" : "opportunities"} found
+      </p>
+
       <div className="rounded-lg border border-gray-200 bg-white">
         {opportunities.length === 0 ? (
           <div className="p-8 text-center">
@@ -105,10 +109,33 @@ async function OpportunitiesContent({ searchParams }) {
                     {opportunity.organization &&
                       ` · ${opportunity.organization}`}
                   </p>
+
+                  {opportunity.application_deadline && (
+                    <p className="mt-1 text-xs text-gray-500">
+                      Deadline:{" "}
+                      {new Date(
+                        opportunity.application_deadline,
+                      ).toLocaleDateString("en-NG", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <span className="w-fit rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
+                  <span
+                    className={`w-fit rounded-full px-3 py-1 text-xs font-medium capitalize ${
+                      opportunity.status === "published"
+                        ? "bg-green-100 text-green-700"
+                        : opportunity.status === "draft"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : opportunity.status === "expired"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-gray-100 text-gray-700"
+                    }`}
+                  >
                     {opportunity.status}
                   </span>
 
