@@ -9,11 +9,20 @@ async function OpportunitiesContent({ searchParams }) {
   const search = params.search || "";
   const category = params.category || "";
   const status = params.status || "";
+  const requestedPage = Number.parseInt(params?.page, 10) || 1;
+  const page = Math.max(1, requestedPage);
 
-  const [opportunities, categories] = await Promise.all([
-    getAdminOpportunities({ search, category, status }),
-    getAdminCategories(),
-  ]);
+  const [{ opportunities, total, currentPage, totalPages }, categories] =
+    await Promise.all([
+      getAdminOpportunities({
+        search,
+        category,
+        status,
+        page,
+        limit: 10,
+      }),
+      getAdminCategories(),
+    ]);
 
   return (
     <>
@@ -117,6 +126,48 @@ async function OpportunitiesContent({ searchParams }) {
           </div>
         )}
       </div>
+
+      {totalPages > 1 && (
+        <div className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4">
+          <a
+            href={`?${new URLSearchParams({
+              search,
+              category,
+              status,
+              page: String(currentPage - 1),
+            })}`}
+            className={`rounded-md border px-4 py-2 text-sm ${
+              currentPage === 1
+                ? "pointer-events-none opacity-50"
+                : "hover:bg-gray-50"
+            }`}
+            aria-disabled={currentPage === 1}
+          >
+            Previous
+          </a>
+
+          <span className="text-sm text-gray-600">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <a
+            href={`?${new URLSearchParams({
+              search,
+              category,
+              status,
+              page: String(currentPage + 1),
+            })}`}
+            className={`rounded-md border px-4 py-2 text-sm ${
+              currentPage === totalPages
+                ? "pointer-events-none opacity-50"
+                : "hover:bg-gray-50"
+            }`}
+            aria-disabled={currentPage === totalPages}
+          >
+            Next
+          </a>
+        </div>
+      )}
     </>
   );
 }
