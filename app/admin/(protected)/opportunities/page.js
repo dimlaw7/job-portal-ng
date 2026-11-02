@@ -1,59 +1,127 @@
 import { Suspense } from "react";
 import { getAdminOpportunities } from "@/lib/db/opportunities";
 import DeleteOpportunityButton from "@/components/admin/opportunities/DeleteOpportunityButton";
+import { getAdminCategories } from "@/lib/db/admin";
 
-async function OpportunitiesContent() {
-  const opportunities = await getAdminOpportunities();
+async function OpportunitiesContent({ searchParams }) {
+  const params = await searchParams;
+
+  const search = params.search || "";
+  const category = params.category || "";
+  const status = params.status || "";
+
+  const [opportunities, categories] = await Promise.all([
+    getAdminOpportunities({ search, category, status }),
+    getAdminCategories(),
+  ]);
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white">
-      {opportunities.length === 0 ? (
-        <div className="p-8 text-center">
-          <p className="text-sm text-gray-500">
-            No opportunities have been added yet.
-          </p>
-        </div>
-      ) : (
-        <div className="divide-y divide-gray-200">
-          {opportunities.map((opportunity) => (
-            <div
-              key={opportunity.id}
-              className="flex flex-col gap-2 p-5 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div>
-                <h2 className="font-semibold text-gray-900">
-                  {opportunity.title}
-                </h2>
+    <>
+      <form
+        method="GET"
+        className="mb-5 flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 sm:flex-row sm:items-center"
+      >
+        <input
+          type="search"
+          name="search"
+          defaultValue={search}
+          placeholder="Search opportunities..."
+          className="min-w-0 flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500"
+        />
 
-                <p className="mt-1 text-sm text-gray-500">
-                  {opportunity.category}
-                  {opportunity.organization && ` · ${opportunity.organization}`}
-                </p>
-              </div>
+        <select
+          name="category"
+          defaultValue={category}
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500"
+        >
+          <option value="">All categories</option>
 
-              <div className="flex items-center gap-4">
-                <span className="w-fit rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
-                  {opportunity.status}
-                </span>
-
-                <a
-                  href={`/admin/opportunities/${opportunity.id}/edit`}
-                  className="text-sm font-semibold text-blue-700 hover:text-blue-900"
-                >
-                  Edit
-                </a>
-
-                <DeleteOpportunityButton opportunityId={opportunity.id} />
-              </div>
-            </div>
+          {categories.map((item) => (
+            <option key={item.id} value={item.slug}>
+              {item.name}
+            </option>
           ))}
-        </div>
-      )}
-    </div>
+        </select>
+
+        <select
+          name="status"
+          defaultValue={status}
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500"
+        >
+          <option value="">All statuses</option>
+          <option value="published">Published</option>
+          <option value="draft">Draft</option>
+          <option value="expired">Expired</option>
+          <option value="rejected">Rejected</option>
+        </select>
+
+        <button
+          type="submit"
+          className="rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-800"
+        >
+          Apply filters
+        </button>
+
+        <a
+          href="/admin/opportunities"
+          className="text-center text-sm font-medium text-gray-600 hover:text-gray-900"
+        >
+          Clear
+        </a>
+      </form>
+
+      <div className="rounded-lg border border-gray-200 bg-white">
+        {opportunities.length === 0 ? (
+          <div className="p-8 text-center">
+            <p className="text-sm text-gray-500">
+              {search || category || status
+                ? "No opportunities match your filters."
+                : "No opportunities have been added yet."}
+            </p>
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-200">
+            {opportunities.map((opportunity) => (
+              <div
+                key={opportunity.id}
+                className="flex flex-col gap-2 p-5 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div>
+                  <h2 className="font-semibold text-gray-900">
+                    {opportunity.title}
+                  </h2>
+
+                  <p className="mt-1 text-sm text-gray-500">
+                    {opportunity.category}
+                    {opportunity.organization &&
+                      ` · ${opportunity.organization}`}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <span className="w-fit rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
+                    {opportunity.status}
+                  </span>
+
+                  <a
+                    href={`/admin/opportunities/${opportunity.id}/edit`}
+                    className="text-sm font-semibold text-blue-700 hover:text-blue-900"
+                  >
+                    Edit
+                  </a>
+
+                  <DeleteOpportunityButton opportunityId={opportunity.id} />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 
-export default function OpportunitiesPage() {
+export default function OpportunitiesPage({ searchParams }) {
   return (
     <div>
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -80,7 +148,7 @@ export default function OpportunitiesPage() {
           </div>
         }
       >
-        <OpportunitiesContent />
+        <OpportunitiesContent searchParams={searchParams} />
       </Suspense>
     </div>
   );
