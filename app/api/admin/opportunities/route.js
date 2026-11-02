@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdmin } from "@/lib/auth/admin";
 import pool from "@/lib/db";
+import { generateSlug } from "@/lib/utils/slug";
 
 export async function POST(request) {
   try {
@@ -109,6 +110,32 @@ export async function POST(request) {
         { message: "Selected source does not exist or is inactive." },
         { status: 400 },
       );
+    }
+
+    const baseSlug = generateSlug(data.title);
+
+    if (!baseSlug) {
+      return NextResponse.json(
+        { message: "Unable to generate a slug from this title." },
+        { status: 400 },
+      );
+    }
+
+    let slug = baseSlug;
+    let counter = 1;
+
+    while (true) {
+      const [existing] = await pool.query(
+        "SELECT id FROM opportunities WHERE slug = ? LIMIT 1",
+        [slug],
+      );
+
+      if (existing.length === 0) {
+        break;
+      }
+
+      counter++;
+      slug = `${baseSlug}-${counter}`;
     }
 
     console.log("Received opportunity:", data);

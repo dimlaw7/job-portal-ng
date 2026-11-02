@@ -37,6 +37,7 @@ export default function OpportunityForm({ categories, sources }) {
     const opportunityData = Object.fromEntries(formData.entries());
 
     opportunityData.category_id = Number(categoryId);
+    opportunityData.source_id = Number(opportunityData.source_id);
     opportunityData.description = description;
     opportunityData.application_links = applicationLinks;
     opportunityData.status = status;
