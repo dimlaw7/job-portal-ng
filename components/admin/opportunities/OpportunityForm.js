@@ -70,13 +70,20 @@ export default function OpportunityForm({ categories, sources, initialData }) {
       opportunityData.status = status;
       opportunityData.is_featured = isFeatured;
 
-      const response = await fetch("/api/admin/opportunities", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const isEditing = Boolean(initialData?.id);
+
+      const response = await fetch(
+        isEditing
+          ? `/api/admin/opportunities/${initialData.id}`
+          : "/api/admin/opportunities",
+        {
+          method: isEditing ? "PUT" : "POST",
+          body: JSON.stringify(opportunityData),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-        body: JSON.stringify(opportunityData),
-      });
+      );
 
       const result = await response.json();
 
