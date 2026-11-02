@@ -356,3 +356,48 @@ export async function PUT(request, { params }) {
     );
   }
 }
+
+export async function DELETE(request, { params }) {
+  try {
+    const admin = await getAdmin();
+
+    if (!admin) {
+      return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const opportunityId = Number(id);
+
+    if (!Number.isSafeInteger(opportunityId) || opportunityId <= 0) {
+      return NextResponse.json(
+        { message: "Invalid opportunity ID." },
+        { status: 400 },
+      );
+    }
+
+    const [opportunities] = await pool.query(
+      "SELECT id FROM opportunities WHERE id = ? LIMIT 1",
+      [opportunityId],
+    );
+
+    if (opportunities.length === 0) {
+      return NextResponse.json(
+        { message: "Opportunity not found." },
+        { status: 404 },
+      );
+    }
+
+    await pool.query("DELETE FROM opportunities WHERE id = ?", [opportunityId]);
+
+    return NextResponse.json({
+      message: "Opportunity deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Opportunity deletion API error:", error);
+
+    return NextResponse.json(
+      { message: "Unable to delete opportunity." },
+      { status: 500 },
+    );
+  }
+}

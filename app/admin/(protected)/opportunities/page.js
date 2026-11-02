@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { getAdminOpportunities } from "@/lib/db/opportunities";
+import DeleteOpportunityButton from "@/components/admin/opportunities/DeleteOpportunityButton";
 
 async function OpportunitiesContent() {
   const opportunities = await getAdminOpportunities();
@@ -41,6 +42,8 @@ async function OpportunitiesContent() {
                 >
                   Edit
                 </a>
+
+                <DeleteOpportunityButton opportunityId={opportunity.id} />
               </div>
             </div>
           ))}
