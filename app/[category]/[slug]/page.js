@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 import { getOpportunityBySlug } from "@/lib/db/opportunities";
 import SiteLayout from "@/components/layout/SiteLayout";
+import { sanitizeDescription } from "@/lib/utils/sanitize-description";
 
 async function OpportunityContent({ category, slug }) {
   const opportunity = await getOpportunityBySlug(category, slug);
@@ -10,6 +11,8 @@ async function OpportunityContent({ category, slug }) {
   if (!opportunity) {
     notFound();
   }
+
+  const safeDescription = sanitizeDescription(opportunity.description || "");
 
   const expired =
     opportunity.status === "expired" ||
@@ -86,9 +89,10 @@ async function OpportunityContent({ category, slug }) {
             About this opportunity
           </h2>
 
-          <p className="mt-4 whitespace-pre-line leading-relaxed text-gray-700">
-            {opportunity.description}
-          </p>
+          <div
+            className="prose prose-sm mt-4 max-w-none text-gray-700"
+            dangerouslySetInnerHTML={{ __html: safeDescription }}
+          />
         </div>
 
         <div className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-5">
