@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { getAdminOpportunities } from "@/lib/db/opportunities";
 import DeleteOpportunityButton from "@/components/admin/opportunities/DeleteOpportunityButton";
 import { getAdminCategories } from "@/lib/db/admin";
+import OpportunityBulkActions from "@/components/admin/opportunities/OpportunityBulkActions";
 
 async function OpportunitiesContent({ searchParams }) {
   const params = await searchParams;
@@ -83,76 +84,17 @@ async function OpportunitiesContent({ searchParams }) {
         {total} {total === 1 ? "opportunity" : "opportunities"} found
       </p>
 
-      <div className="rounded-lg border border-gray-200 bg-white">
-        {opportunities.length === 0 ? (
-          <div className="p-8 text-center">
-            <p className="text-sm text-gray-500">
-              {search || category || status
-                ? "No opportunities match your filters."
-                : "No opportunities have been added yet."}
-            </p>
-          </div>
-        ) : (
-          <div className="divide-y divide-gray-200">
-            {opportunities.map((opportunity) => (
-              <div
-                key={opportunity.id}
-                className="flex flex-col gap-2 p-5 sm:flex-row sm:items-center sm:justify-between"
-              >
-                <div>
-                  <h2 className="font-semibold text-gray-900">
-                    {opportunity.title}
-                  </h2>
-
-                  <p className="mt-1 text-sm text-gray-500">
-                    {opportunity.category}
-                    {opportunity.organization &&
-                      ` · ${opportunity.organization}`}
-                  </p>
-
-                  {opportunity.application_deadline && (
-                    <p className="mt-1 text-xs text-gray-500">
-                      Deadline:{" "}
-                      {new Date(
-                        opportunity.application_deadline,
-                      ).toLocaleDateString("en-NG", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <span
-                    className={`w-fit rounded-full px-3 py-1 text-xs font-medium capitalize ${
-                      opportunity.status === "published"
-                        ? "bg-green-100 text-green-700"
-                        : opportunity.status === "draft"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : opportunity.status === "expired"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-gray-100 text-gray-700"
-                    }`}
-                  >
-                    {opportunity.status}
-                  </span>
-
-                  <a
-                    href={`/admin/opportunities/${opportunity.id}/edit`}
-                    className="text-sm font-semibold text-blue-700 hover:text-blue-900"
-                  >
-                    Edit
-                  </a>
-
-                  <DeleteOpportunityButton opportunityId={opportunity.id} />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      {opportunities.length === 0 ? (
+        <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
+          <p className="text-sm text-gray-500">
+            {search || category || status
+              ? "No opportunities match your filters."
+              : "No opportunities have been added yet."}
+          </p>
+        </div>
+      ) : (
+        <OpportunityBulkActions opportunities={opportunities} />
+      )}
 
       {totalPages > 1 && (
         <div className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4">
