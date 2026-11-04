@@ -19,7 +19,8 @@ export default function OpportunityEditor({ value, onChange }) {
 
     editorProps: {
       attributes: {
-        class: "min-h-[240px] w-full px-4 py-3 text-sm outline-none",
+        class:
+          "prose prose-sm max-w-none min-h-[240px] w-full px-4 py-3 outline-none",
       },
     },
 
@@ -48,7 +49,7 @@ export default function OpportunityEditor({ value, onChange }) {
 
   return (
     <div className="rounded-md border border-gray-300">
-      <div className="flex flex-wrap gap-2 border-b border-gray-200 p-3">
+      <div className="sticky top-0 z-20 flex flex-wrap gap-2 rounded-t-md border-b border-gray-200 bg-white p-3 shadow-sm">
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}

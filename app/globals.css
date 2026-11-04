@@ -65,3 +65,19 @@ a {
 img {
   max-width: 100%;
 }
+
+/* Tiptap editor and published article links */
+.tiptap a,
+.prose a {
+  color: var(--brand);
+  text-decoration: underline;
+  text-decoration-color: var(--brand);
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+.tiptap a:hover,
+.prose a:hover {
+  color: var(--brand-hover);
+  text-decoration-color: var(--brand-hover);
+}
