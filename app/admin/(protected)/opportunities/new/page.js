@@ -2,8 +2,6 @@ import { Suspense } from "react";
 import { getOpportunityFormOptions } from "@/lib/db/admin";
 import OpportunityForm from "@/components/admin/opportunities/OpportunityForm";
 
-export const dynamic = "force-dynamic";
-
 async function NewOpportunityContent() {
   const { categories, sources } = await getOpportunityFormOptions();
 
