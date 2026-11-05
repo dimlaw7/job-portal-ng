@@ -1,8 +1,12 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { getOpportunityFormOptions } from "@/lib/db/admin";
 import OpportunityForm from "@/components/admin/opportunities/OpportunityForm";
 
 async function NewOpportunityContent() {
+  // Wait for an incoming request before accessing the database.
+  await connection();
+
   const { categories, sources } = await getOpportunityFormOptions();
 
   return (
