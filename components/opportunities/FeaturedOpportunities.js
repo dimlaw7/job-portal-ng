@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { getFeaturedOpportunities } from "@/lib/db/opportunities";
+import { connection } from "next/server";
 
 export default async function FeaturedOpportunities() {
+  // Wait for an incoming request before accessing the database.
+  await connection();
+
   const opportunities = await getFeaturedOpportunities(6);
 
   if (opportunities.length === 0) {
@@ -25,7 +29,7 @@ export default async function FeaturedOpportunities() {
           <Link
             key={opportunity.id}
             href={`/${opportunity.category_slug}/${opportunity.slug}`}
-            className="w-[280px] shrink-0 rounded-lg border border-gray-200 bg-white p-4 transition hover:border-brand"
+            className="w-70 shrink-0 rounded-lg border border-gray-200 bg-white p-4 transition hover:border-brand"
           >
             {opportunity.featured_image && (
               <img

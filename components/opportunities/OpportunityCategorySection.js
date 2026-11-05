@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { getLatestOpportunitiesByCategory } from "@/lib/db/opportunities";
 import OpportunityListItem from "./OpportunityListItem";
+import { connection } from "next/server";
 
 export default async function OpportunityCategorySection({
   title,
   categorySlug,
   description,
 }) {
+  await connection();
+
   const opportunities = await getLatestOpportunitiesByCategory(categorySlug, 5);
 
   return (
